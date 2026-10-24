@@ -33,3 +33,15 @@ export function all(db, sql, params = []) {
     });
   });
 }
+
+export function close(db) {
+  return new Promise((resolve, reject) => {
+    db.close((err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
