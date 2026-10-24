@@ -7,15 +7,13 @@ run(
   db,
   "CREATE TABLE books (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL UNIQUE)",
 )
-  .then(() =>
-    run(db, "INSERT INTO books (title) VALUES (?)", [null]).catch((err) => {
-      console.error(err.message);
-    }),
-  )
-  .then(() =>
-    all(db, "SELECT * FROM no_such_table").catch((err) => {
-      console.error(err.message);
-    }),
-  )
+  .then(() => run(db, "INSERT INTO books (title) VALUES (?)", [null]))
+  .catch((err) => {
+    console.error(err.message);
+  })
+  .then(() => all(db, "SELECT * FROM no_such_table"))
+  .catch((err) => {
+    console.error(err.message);
+  })
   .then(() => run(db, "DROP TABLE books"))
   .then(() => close(db));
