@@ -5,8 +5,8 @@ import minimist from "minimist";
 const MIN_YEAR = 1970;
 const MAX_YEAR = 2100;
 const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
-// 「日 月 火 水 木 金 土 」の表示幅（全角=2桁）に、行末の余白2桁を足した幅
-const CALENDAR_WIDTH = 22;
+// 「日 月 火 水 木 金 土」の表示幅（全角=2桁×7 + 空白×6）
+const CALENDAR_WIDTH = 20;
 
 const parseIntegerOption = (value, name, min, max, defaultValue) => {
   if (value === undefined) {
@@ -20,9 +20,7 @@ const parseIntegerOption = (value, name, min, max, defaultValue) => {
 
 const buildTitle = (year, month) => {
   const title = `${month}月 ${year}`;
-  // 「月」は全角なので表示幅は文字数より1大きい
-  const displayWidth = title.length + 1;
-  const padding = " ".repeat(Math.floor((CALENDAR_WIDTH - displayWidth) / 2));
+  const padding = " ".repeat(Math.floor((CALENDAR_WIDTH - title.length) / 2));
   return `${padding}${title}`;
 };
 
