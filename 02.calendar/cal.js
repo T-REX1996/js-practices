@@ -4,7 +4,7 @@ import minimist from "minimist";
 
 const MIN_YEAR = 1970;
 const MAX_YEAR = 2100;
-const WEEKDAYS = ["日", "月", "火", "水", "木", "金", "土"];
+const WEEKDAYS = "日 月 火 水 木 金 土";
 // 「日 月 火 水 木 金 土」の表示幅（全角=2桁×7 + 空白×6）
 const CALENDAR_WIDTH = 20;
 
@@ -25,25 +25,27 @@ const buildTitle = (year, month) => {
 };
 
 const buildCalendar = (year, month) => {
+  const lines = [buildTitle(year, month), WEEKDAYS];
+
   // UTC で計算してタイムゾーンの影響を避ける
-  const firstDay = new Date(Date.UTC(year, month - 1, 1));
-  const lastDay = new Date(Date.UTC(year, month, 0));
+  const firstDate = new Date(Date.UTC(year, month - 1, 1));
+  const lastDate = new Date(Date.UTC(year, month, 0));
 
-  const lines = [buildTitle(year, month), WEEKDAYS.join(" ")];
-
-  let line = "   ".repeat(firstDay.getUTCDay());
-  for (let day = 1; day <= lastDay.getUTCDate(); day++) {
-    const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
-    line += String(day).padStart(2, " ");
-    if (weekday === 6) {
+  let line = "   ".repeat(firstDate.getUTCDay());
+  for (
+    const date = new Date(firstDate);
+    date <= lastDate;
+    date.setUTCDate(date.getUTCDate() + 1)
+  ) {
+    line += String(date.getUTCDate()).padStart(2, " ");
+    const isSaturday = date.getUTCDay() === 6;
+    const isLastDayOfMonth = date.getTime() === lastDate.getTime();
+    if (isSaturday || isLastDayOfMonth) {
       lines.push(line);
       line = "";
     } else {
       line += " ";
     }
-  }
-  if (line !== "") {
-    lines.push(line.trimEnd());
   }
 
   return lines.join("\n");
