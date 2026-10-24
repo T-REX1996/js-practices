@@ -11,7 +11,7 @@ await run(
 try {
   await run(db, "INSERT INTO books (title) VALUES (?)", [null]);
 } catch (err) {
-  if (err.code === "SQLITE_CONSTRAINT") {
+  if (err instanceof Error && err.code === "SQLITE_CONSTRAINT") {
     console.error(err.message);
   } else {
     throw err;
@@ -21,7 +21,7 @@ try {
 try {
   await all(db, "SELECT * FROM no_such_table");
 } catch (err) {
-  if (err.code === "SQLITE_ERROR") {
+  if (err instanceof Error && err.code === "SQLITE_ERROR") {
     console.error(err.message);
   } else {
     throw err;
